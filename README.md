@@ -1,9 +1,9 @@
-# Vdai
+# KivyApp
 
 ## Overview
-This project is to communicate with client and display the necessary information to analyze from the database that client 
-saves the data from the machine into.
-The kivy framework is used for GUI and SQLite3 is used as a database.
+This project is to communicate with some sensors called client and display the necessary information to analyze from the database that client 
+saves the data from the machine.
+The Kivy framework is used for GUI and SQLite3 is used as a database.
 
 ## Structure
 
@@ -31,7 +31,7 @@ The kivy framework is used for GUI and SQLite3 is used as a database.
 
 - Environment
     
-    Ubuntu 18.04, Windows 10, Python 3.6, GPU
+    Ubuntu 18.04, Windows 10, Python 3.6
 
 - Dependency Installation
 
@@ -48,8 +48,6 @@ The kivy framework is used for GUI and SQLite3 is used as a database.
     ``` 
 
 ## Execution
-
-- Please input the absolute path of the sqlite file into DB_NAME variable in settings file 
 
 - Please run the following command in the terminal
 
