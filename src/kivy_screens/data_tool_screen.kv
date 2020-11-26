@@ -1,0 +1,233 @@
+#:set gray_header_label [0.25, 0.25, 0.25, 1.0]
+#:set body_screen [0.85, 0.88, 0.95, 1.0]
+#:set top_button [0.19, 0.33, 0.59, 1.0]
+#:set screen_button [0.16, 0.34, 0.66, 1.0]
+#:set button_click [0.75, 0.0, 0.0, 1.0]
+#:set block_line [0.36, 0.61, 0.84, 1.0]
+#:set gsg_command [0.88, 0.66, 0.0, 1.0]
+#:set client_command [0.41, 0.64, 0.26, 1.0]
+
+
+<DataToolScreen>:
+    FloatLayout:
+        FloatLayout:
+            canvas.before:
+                Color:
+                    rgba: gray_header_label
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            orientation: 'horizontal'
+            size_hint: 1, 0.1
+            padding: [20, 20, 20, 0]
+            spacing: 10
+        FloatLayout:
+            canvas.before:
+                Color:
+                    rgba: body_screen
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            orientation: 'horizontal'
+            size_hint: 1, 0.9
+            padding: [20, 0, 20, 20]
+            spacing: 10
+        RoundedButton:
+            size_hint: 0.15, 0.1
+            pos_hint: {'center_x': 0.1, 'center_y': 0.9}
+            spacing: 10
+            text: "VDAI Daten"
+            back_color: top_button
+            on_press:
+                root.manager.transition.direction = 'right'
+                root.manager.current = 'data'
+        RoundedButton:
+            size_hint: 0.15, 0.1
+            pos_hint: {'center_x': 0.3, 'center_y': 0.9}
+            spacing: 10
+            text: "Analyse"
+            back_color: top_button
+            on_press:
+                root.manager.transition.direction = 'right'
+                root.manager.current = 'analyze'
+        RoundedButton:
+            size_hint: 0.15, 0.1
+            pos_hint: {'center_x': 0.5, 'center_y': 0.9}
+            spacing: 10
+            text: "Optimierung"
+            back_color: top_button
+            on_press:
+                root.manager.transition.direction = 'right'
+                root.manager.current = 'optimization'
+        RoundedButton:
+            size_hint: 0.15, 0.1
+            pos_hint: {'center_x': 0.9, 'center_y': 0.9}
+            spacing: 10
+            text: "Datenbank Tools"
+            back_color: button_click
+            on_press:
+                root.manager.current = 'data_tool'
+        FloatLayout:
+            canvas.before:
+                Color:
+                    rgba: block_line
+                Line:
+                    width: 5
+                    rectangle: self.x, self.y, self.width, self.height
+            orientation: 'vertical'
+            size_hint: 0.2, 0.75
+            pos_hint: {'center_x': 0.13, 'center_y': 0.43}
+            padding: [20, 20, 20, 20]
+            spacing: 10
+            RoundedButton:
+                size_hint: 0.8, 0.15
+                pos_hint: {'center_x': 0.5, 'center_y': 0.8}
+                spacing: 10
+                text: "GSG Tools"
+                back_color: block_line
+                on_press: root.set_gsg_command()
+            RoundedButton:
+                size_hint: 0.8, 0.15
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                spacing: 10
+                text: "Client Tools"
+                back_color: block_line
+                on_press: root.set_client_command()
+        BoxLayout:
+            id: data_tool_info_screen
+            canvas.before:
+                Color:
+                    rgba: block_line
+                Line:
+                    width: 5
+                    rectangle: self.x, self.y, self.width, self.height
+            size_hint: 0.7, 0.75
+            pos_hint: {'center_x': 0.62, 'center_y': 0.43}
+
+<GSGCommand@BoxLayout>
+    orientation: 'vertical'
+    padding: [20, 20, 20, 20]
+    spacing: 10
+    Label:
+        size_hint_y: None
+        height: 60
+        id: client_place_model
+        text: ""
+        font_size: 20
+        color: 1.0, 0.0, 0.0, 1.0
+        canvas.before:
+            Color:
+                rgba: block_line
+            Rectangle:
+                pos: self.pos
+                size: self.size
+    BoxLayout:
+        size_hint: 1.0, 0.9
+        orientation: 'vertical'
+        pos_hint: {'center_x': 0.5, 'center_y': 0.9}
+        BoxLayout:
+            size_hint_y: None
+            height: 60
+            orientation: "horizontal"
+            spacing: 30
+            RoundedButton:
+                size_hint_x: 0.5
+                text: "Command1"
+                color: top_button
+                font_size: 25
+                back_color: gsg_command
+            RoundedButton:
+                size_hint_x: 0.5
+                text: "Command2"
+                color: top_button
+                font_size: 25
+                back_color: gsg_command
+        BoxLayout:
+            size_hint_y: None
+            height: 100
+            orientation: "horizontal"
+            spacing: 30
+            padding: 0, 20, 0, 20
+            RoundedButton:
+                size_hint_x: 0.5
+                text: "Command3"
+                color: top_button
+                font_size: 25
+                back_color: gsg_command
+            RoundedButton:
+                size_hint_x: 0.5
+                text: "Command4"
+                color: top_button
+                font_size: 25
+                back_color: gsg_command
+    Widget
+
+<ClientCommand@BoxLayout>
+    orientation: 'vertical'
+    padding: [20, 20, 20, 20]
+    spacing: 10
+    Label:
+        size_hint_y: None
+        height: 60
+        id: client_place_model
+        text: ""
+        font_size: 20
+        color: 1.0, 0.0, 0.0, 1.0
+        canvas.before:
+            Color:
+                rgba: block_line
+            Rectangle:
+                pos: self.pos
+                size: self.size
+    BoxLayout:
+        size_hint: 1.0, 0.9
+        orientation: 'vertical'
+        pos_hint: {'center_x': 0.5, 'center_y': 0.9}
+        BoxLayout:
+            size_hint_y: None
+            height: 60
+            orientation: "horizontal"
+            spacing: 30
+            RoundedButton:
+                size_hint_x: 0.5
+                text: "Command1"
+                color: top_button
+                font_size: 25
+                back_color: client_command
+            RoundedButton:
+                size_hint_x: 0.5
+                text: "Command2"
+                color: top_button
+                font_size: 25
+                back_color: client_command
+        BoxLayout:
+            size_hint_y: None
+            height: 100
+            orientation: "horizontal"
+            spacing: 30
+            padding: 0, 20, 0, 20
+            RoundedButton:
+                size_hint_x: 0.5
+                text: "Command3"
+                color: top_button
+                font_size: 25
+                back_color: client_command
+            RoundedButton:
+                size_hint_x: 0.5
+                text: "Command4"
+                color: top_button
+                font_size: 25
+                back_color: client_command
+    Widget
+
+<RoundedButton@Button>:
+    background_color: 0, 0, 0, 0  # the last zero is the critical on, make invisible
+    back_color: (1, 0, 1, 1)
+    border_radius: [18]
+    canvas.before:
+        Color:
+            rgba: self.back_color  # visual feedback of press
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: self.border_radius

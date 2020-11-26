@@ -1,0 +1,1238 @@
+``#:set gray_header_label [0.25, 0.25, 0.25, 1.0]
+#:set body_screen [0.85, 0.88, 0.95, 1.0]
+#:set top_button [0.19, 0.33, 0.59, 1.0]
+#:set screen_button [0.16, 0.34, 0.66, 1.0]
+#:set button_click [0.75, 0.0, 0.0, 1.0]
+#:set block_line [0.36, 0.61, 0.84, 1.0]
+#:set readout_yellow_button [1.0, 0.95, 0.80, 1.0]
+#:set readout_light_green_button [0.89, 0.94, 0.85, 1.0]
+
+<DataScreen>:
+    FloatLayout:
+        FloatLayout:
+            canvas.before:
+                Color:
+                    rgba: gray_header_label
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            orientation: 'horizontal'
+            size_hint: 1, 0.1
+            padding: [20, 20, 20, 0]
+            spacing: 10
+        FloatLayout:
+            canvas.before:
+                Color:
+                    rgba: body_screen
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            orientation: 'horizontal'
+            size_hint: 1, 0.9
+            padding: [20, 0, 20, 20]
+            spacing: 10
+        RoundedButton:
+            size_hint: 0.15, 0.1
+            pos_hint: {'center_x': 0.1, 'center_y': 0.9}
+            spacing: 10
+            text: "VDAI Daten"
+            back_color: button_click
+            on_press:
+                root.manager.current = 'data'
+        RoundedButton:
+            size_hint: 0.15, 0.1
+            pos_hint: {'center_x': 0.3, 'center_y': 0.9}
+            spacing: 10
+            text: "Analyse"
+            back_color: top_button
+            on_press:
+                root.manager.transition.direction = 'left'
+                root.manager.current = 'analyze'
+        RoundedButton:
+            size_hint: 0.15, 0.1
+            pos_hint: {'center_x': 0.5, 'center_y': 0.9}
+            spacing: 10
+            text: "Optimierung"
+            back_color: top_button
+            on_press:
+                root.manager.transition.direction = 'left'
+                root.manager.current = 'optimization'
+        RoundedButton:
+            size_hint: 0.15, 0.1
+            pos_hint: {'center_x': 0.9, 'center_y': 0.9}
+            spacing: 10
+            text: "Datenbank Tools"
+            back_color: top_button
+            on_press:
+                root.manager.transition.direction = 'left'
+                root.manager.current = 'data_tool'
+        FloatLayout:
+            canvas.before:
+                Color:
+                    rgba: block_line
+                Line:
+                    width: 5
+                    rectangle: self.x, self.y, self.width, self.height
+            orientation: 'vertical'
+            size_hint: 0.2, 0.75
+            pos_hint: {'center_x': 0.13, 'center_y': 0.43}
+            padding: [20, 20, 20, 20]
+            spacing: 10
+            RoundedButton:
+                size_hint: 0.8, 0.15
+                pos_hint: {'center_x': 0.5, 'center_y': 0.8}
+                spacing: 10
+                text: "DATA"
+                border: (10, 10, 10, 10)
+                back_color: block_line
+                on_press: root.select_method("data")
+            RoundedButton:
+                size_hint: 0.8, 0.15
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                spacing: 10
+                text: "Month Compare"
+                back_color: block_line
+                on_press: root.select_method("compare")
+            RoundedButton:
+                size_hint: 0.8, 0.15
+                pos_hint: {'center_x': 0.5, 'center_y': 0.2}
+                spacing: 10
+                text: "Readout"
+                back_color: block_line
+                on_press: root.readout_client_response()
+        BoxLayout:
+            id: info_screen
+            canvas.before:
+                Color:
+                    rgba: block_line
+                Line:
+                    width: 5
+                    rectangle: self.x, self.y, self.width, self.height
+            size_hint: 0.7, 0.75
+            pos_hint: {'center_x': 0.62, 'center_y': 0.43}
+
+
+<DataInfo@BoxLayout>
+    orientation: 'vertical'
+    padding: [20, 20, 20, 20]
+    spacing: 10
+    BoxLayout:
+        size_hint_y: None
+        height: 50
+        spacing: 10
+        RoundedButton:
+            text: "Selection"
+            color: top_button
+            font_size: 30
+            back_color: block_line
+            on_press: root.display_each_file()
+        Label:
+            text: "Client:"
+            font_size: 30
+            color: top_button
+        Label:
+            id: selected_client
+            text: ""
+            font_size: 16
+            color: 1.0, 0.0, 0.0, 1.0
+            canvas.before:
+                Color:
+                    rgba: 1.0, 1.0, 1.0, 1.0
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+        Label:
+            text: "Datum:"
+            font_size: 30
+            color: top_button
+        Label:
+            id: selected_date
+            text: ""
+            font_size: 16
+            color: 1.0, 0.0, 0.0, 1.0
+            canvas.before:
+                Color:
+                    rgba: 1.0, 1.0, 1.0, 1.0
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+    Label:
+        size_hint_y: None
+        height: 60
+        id: client_place_model
+        text: ""
+        font_size: 20
+        color: 1.0, 0.0, 0.0, 1.0
+        canvas.before:
+            Color:
+                rgba: block_line
+            Rectangle:
+                pos: self.pos
+                size: self.size
+    BoxLayout:
+        id: date_info_view
+        size_hint: 1.0, 0.9
+        orientation: 'vertical'
+        pos_hint: {'center_x': 0.5, 'center_y': 0.9}
+        BoxLayout:
+            id: header
+            size_hint_y: None
+            height: 50
+            Button:
+                text: "Check"
+                size_hint_x: 0.06
+                font_size: 18
+                background_color: top_button
+            Button:
+                text: "Geräte Nr."
+                size_hint_x: 0.12
+                font_size: 18
+                background_color: top_button
+            Button:
+                text: "Zulassungs Nr."
+                size_hint_x: 0.14
+                font_size: 18
+                background_color: top_button
+            Button:
+                text: "Datum"
+                size_hint_x: 0.16
+                font_size: 18
+                background_color: top_button
+            Button:
+                text: "Einwurf"
+                size_hint_x: 0.12
+                font_size: 18
+                background_color: top_button
+            Button:
+                text: "Auswurf"
+                size_hint_x: 0.12
+                font_size: 18
+                background_color: top_button
+            Button:
+                text: "Saldo (1)"
+                size_hint_x: 0.12
+                font_size: 18
+                background_color: top_button
+
+<DataCompareInfo@BoxLayout>
+    orientation: 'vertical'
+    padding: [20, 20, 20, 20]
+    spacing: 10
+    BoxLayout:
+        size_hint_y: None
+        height: 50
+        spacing: 10
+        Label:
+            text: "Datum:"
+            font_size: 30
+            color: top_button
+        Label:
+            id: f_selected_date
+            text: ""
+            font_size: 25
+            color: 1.0, 0.0, 0.0, 1.0
+            canvas.before:
+                Color:
+                    rgba: 1.0, 1.0, 1.0, 1.0
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+        Label:
+            text: "Datum:"
+            font_size: 30
+            color: top_button
+        Label:
+            id: s_selected_date
+            text: ""
+            font_size: 25
+            color: top_button
+            canvas.before:
+                Color:
+                    rgba: 1.0, 1.0, 1.0, 1.0
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+    Label:
+        size_hint_y: None
+        height: 60
+        id: client_place_model
+        text: ""
+        font_size: 20
+        color: 1.0, 0.0, 0.0, 1.0
+        canvas.before:
+            Color:
+                rgba: block_line
+            Rectangle:
+                pos: self.pos
+                size: self.size
+    BoxLayout:
+        size_hint: 1.0, 0.9
+        orientation: 'horizontal'
+        pos_hint: {'center_x': 0.5, 'center_y': 0.9}
+        BoxLayout:
+            size_hint_x: 0.3
+            size_hint_y: 1.0
+            padding: 0, 0, 10, 0
+            ScrollView
+                Label:
+                    id: f_file_content
+                    text: ""
+                    text_size: self.width, None
+                    height: self.texture_size[1]
+                    size_hint_y: None
+                    size_hint_x: 1.0
+                    padding_x: 20
+                    color: [0.0, 0.0, 0.0, 1.0]
+                    canvas.before:
+                        Color:
+                            rgba: [1.0, 1.0, 1.0, 1.0]
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+        BoxLayout:
+            size_hint_x: 0.3
+            size_hint_y: 1.0
+            padding: 10, 0, 0, 0
+            ScrollView
+                Label:
+                    id: s_file_content
+                    text: ""
+                    text_size: self.width, None
+                    height: self.texture_size[1]
+                    size_hint_y: None
+                    size_hint_x: 1.0
+                    padding_x: 20
+                    color: [0.0, 0.0, 0.0, 1.0]
+                    canvas.before:
+                        Color:
+                            rgba: [1.0, 1.0, 1.0, 1.0]
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+        BoxLayout:
+            size_hint_x: 0.4
+            orientation: "vertical"
+            padding: 20, 0, 0, 0
+            BoxLayout:
+                size_hint_y: None
+                height: 30
+                orientation: "horizontal"
+                spacing: 20
+                Label:
+                    size_hint_x: 0.6
+                    text: "Geräte Nr.:"
+                    font_size: 15
+                    canvas.before:
+                        Color:
+                            rgba: top_button
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                InfoLabel:
+                    id: compare_machine_no
+                    size_hint_x: 0.4
+                    text: ""
+            BoxLayout:
+                size_hint_y: None
+                height: 51
+                orientation: "horizontal"
+                spacing: 20
+                padding: 0, 1, 0, 20
+                Label:
+                    size_hint_x: 0.6
+                    text: "Zulassungs Nr.:"
+                    font_size: 15
+                    canvas.before:
+                        Color:
+                            rgba: top_button
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                InfoLabel:
+                    id: compare_approve_no
+                    size_hint_x: 0.4
+                    text: ""
+            BoxLayout:
+                size_hint_y: None
+                height: 30
+                orientation: "horizontal"
+                spacing: 20
+                Label:
+                    size_hint_x: 0.6
+                    text: "Einwurf:"
+                    color: top_button
+                    font_size: 15
+                    canvas.before:
+                        Color:
+                            rgba: block_line
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                InfoLabel:
+                    id: compare_pay_in
+                    size_hint_x: 0.4
+                    text: ""
+            BoxLayout:
+                size_hint_y: None
+                height: 51
+                orientation: "horizontal"
+                spacing: 20
+                padding: 0, 1, 0, 20
+                Label:
+                    size_hint_x: 0.6
+                    text: "Auswurf:"
+                    color: top_button
+                    font_size: 15
+                    canvas.before:
+                        Color:
+                            rgba: block_line
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                InfoLabel:
+                    id: compare_pay_out
+                    size_hint_x: 0.4
+                    text: ""
+            BoxLayout:
+                size_hint_y: None
+                height: 30
+                orientation: "horizontal"
+                spacing: 20
+                Label:
+                    size_hint_x: 0.6
+                    text: "Saldo (1)"
+                    color: top_button
+                    font_size: 15
+                    canvas.before:
+                        Color:
+                            rgba: block_line
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                InfoLabel:
+                    id: compare_balance1
+                    size_hint_x: 0.4
+                    text: ""
+            BoxLayout:
+                size_hint_y: None
+                height: 51
+                orientation: "horizontal"
+                spacing: 20
+                padding: 0, 1, 0, 20
+                Label:
+                    size_hint_x: 0.6
+                    text: "Saldo (2)"
+                    color: top_button
+                    font_size: 15
+                    canvas.before:
+                        Color:
+                            rgba: block_line
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                InfoLabel:
+                    id: compare_balance2
+                    size_hint_x: 0.4
+                    text: ""
+            BoxLayout:
+                size_hint_y: None
+                height: 30
+                orientation: "horizontal"
+                spacing: 20
+                Label:
+                    size_hint_x: 0.6
+                    text: "Einsätze:"
+                    color: [1.0, 1.0, 1.0, 1.0]
+                    font_size: 15
+                    canvas.before:
+                        Color:
+                            rgba: top_button
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                InfoLabel:
+                    id: compare_operation
+                    size_hint_x: 0.4
+                    text: ""
+            BoxLayout:
+                size_hint_y: None
+                height: 32
+                orientation: "horizontal"
+                spacing: 20
+                padding: 0, 1, 0, 1
+                Label:
+                    size_hint_x: 0.6
+                    text: "Gewinne:"
+                    color: [1.0, 1.0, 1.0, 1.0]
+                    font_size: 15
+                    canvas.before:
+                        Color:
+                            rgba: top_button
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                InfoLabel:
+                    id: compare_profit
+                    size_hint_x: 0.4
+                    text: ""
+            BoxLayout:
+                size_hint_y: None
+                height: 30
+                orientation: "horizontal"
+                spacing: 20
+                Label:
+                    size_hint_x: 0.6
+                    text: "Spieleraufwand:"
+                    color: [1.0, 1.0, 1.0, 1.0]
+                    font_size: 15
+                    canvas.before:
+                        Color:
+                            rgba: top_button
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                InfoLabel:
+                    id: compare_player_burden
+                    size_hint_x: 0.4
+                    text: ""
+            Widget:
+
+<ReadoutInfo@BoxLayout>
+    orientation: 'vertical'
+    padding: [20, 20, 20, 20]
+    spacing: 10
+    Label:
+        size_hint_y: None
+        height: 60
+        id: client_place_model
+        text: ""
+        font_size: 20
+        color: 1.0, 0.0, 0.0, 1.0
+        canvas.before:
+            Color:
+                rgba: block_line
+            Rectangle:
+                pos: self.pos
+                size: self.size
+    BoxLayout:
+        size_hint: 1.0, 0.9
+        orientation: 'horizontal'
+        pos_hint: {'center_x': 0.5, 'center_y': 0.9}
+        padding: 0, 30, 0, 0
+        BoxLayout:
+            size_hint_x: 0.4
+            size_hint_y: 1.0
+            padding: 0, 0, 10, 0
+            ScrollView
+                Label:
+                    id: readout_content
+                    text: ""
+                    text_size: self.width, None
+                    height: self.texture_size[1]
+                    size_hint_y: None
+                    size_hint_x: 1.0
+                    padding_x: 20
+                    color: [0.0, 0.0, 0.0, 1.0]
+                    canvas.before:
+                        Color:
+                            rgba: [1.0, 1.0, 1.0, 1.0]
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+        BoxLayout:
+            size_hint_x: 0.6
+            orientation: "vertical"
+            padding: 10, 0, 0, 0
+            BoxLayout:
+                size_hint_y: None
+                height: 60
+                orientation: "horizontal"
+                spacing: 30
+                RoundedButton:
+                    size_hint_x: 0.5
+                    text: "Kurz m. Löschen"
+                    color: top_button
+                    font_size: 25
+                    back_color: readout_yellow_button
+                    on_press: root.communicate_client("readout:ja_kurz")
+                RoundedButton:
+                    size_hint_x: 0.5
+                    text: "Kurz o. Löschen"
+                    color: top_button
+                    font_size: 25
+                    back_color: readout_yellow_button
+                    on_press: root.communicate_client("readout:nein_kurz")
+            BoxLayout:
+                size_hint_y: None
+                height: 100
+                orientation: "horizontal"
+                spacing: 30
+                padding: 0, 20, 0, 20
+                RoundedButton:
+                    size_hint_x: 0.5
+                    text: "Lang m. Löschen"
+                    color: top_button
+                    font_size: 25
+                    back_color: readout_light_green_button
+                    on_press: root.communicate_client("readout:ja")
+                RoundedButton:
+                    size_hint_x: 0.5
+                    text: "Lang o. Löschen"
+                    color: top_button
+                    font_size: 25
+                    back_color: readout_light_green_button
+                    on_press: root.communicate_client("readout:nein")
+            BoxLayout:
+                size_hint_y: None
+                height: 60
+                RoundedButton:
+                    text: "SD-Karte speichern"
+                    color: top_button
+                    font_size: 25
+                    back_color: block_line
+                    on_press: root.save_sd_card()
+            Widget:
+
+<RoundedButton@Button>:
+    background_color: 0, 0, 0, 0  # the last zero is the critical on, make invisible
+    back_color: (1, 0, 1, 1)
+    border_radius: [18]
+    canvas.before:
+        Color:
+            rgba: self.back_color  # visual feedback of press
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: self.border_radius
+
+<WarningPopup>:
+    id: warn_pop
+    title: "Warning"
+    size_hint: None, None
+    size: 300, 200
+    auto_dismiss: False
+
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            size_hint: 1, 0.7
+            text: root.label
+        Button:
+            size_hint: 1, 0.3
+            text: 'OK'
+            on_press: root.dismiss()
+
+<FileInfoPopup>:
+    title: "File Information"
+    size_hint_x: None
+    size: 1152, 864
+    auto_dismiss: False
+
+    BoxLayout:
+        orientation: 'vertical'
+        canvas.before:
+            Color:
+                rgba: body_screen
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        size_hint_x: 0.9
+        padding: [20, 20, 20, 20]
+        spacing: 10
+        BoxLayout:
+            size_hint_y: None
+            height: 50
+            spacing: 10
+            Widget
+            Label:
+                size_hint_x: 0.2
+                text: "Datum:"
+                font_size: 30
+                color: top_button
+            Label:
+                id: pop_up_date
+                size_hint_x: 0.2
+                text: ""
+                font_size: 16
+                color: 1.0, 0.0, 0.0, 1.0
+                canvas.before:
+                    Color:
+                        rgba: 1.0, 1.0, 1.0, 1.0
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+        Label:
+            size_hint_y: None
+            height: 60
+            id: client_place_model
+            text: ""
+            font_size: 20
+            color: 1.0, 0.0, 0.0, 1.0
+            canvas.before:
+                Color:
+                    rgba: block_line
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+        BoxLayout:
+            orientation: 'horizontal'
+            BoxLayout:
+                size_hint_x: 0.3
+                size_hint_y: 1.0
+                ScrollView
+                    Label:
+                        id: file_content
+                        text: ""
+                        text_size: self.width, None
+                        height: self.texture_size[1]
+                        size_hint_y: None
+                        size_hint_x: 1.0
+                        padding_x: 20
+                        color: [0.0, 0.0, 0.0, 1.0]
+                        canvas.before:
+                            Color:
+                                rgba: [1.0, 1.0, 1.0, 1.0]
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+            BoxLayout:
+                size_hint_x: 0.4
+                orientation: "vertical"
+                padding: 20, 0, 20, 0
+                BoxLayout:
+                    size_hint_y: None
+                    height: 30
+                    orientation: "horizontal"
+                    spacing: 20
+                    Label:
+                        size_hint_x: 0.6
+                        text: "Geräte Nr.:"
+                        font_size: 15
+                        canvas.before:
+                            Color:
+                                rgba: top_button
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                    InfoLabel:
+                        id: pop_up_machine_no
+                        size_hint_x: 0.4
+                        text: ""
+                BoxLayout:
+                    size_hint_y: None
+                    height: 51
+                    orientation: "horizontal"
+                    spacing: 20
+                    padding: 0, 1, 0, 20
+                    Label:
+                        size_hint_x: 0.6
+                        text: "Zulassungs Nr.:"
+                        font_size: 15
+                        canvas.before:
+                            Color:
+                                rgba: top_button
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                    InfoLabel:
+                        id: pop_up_approve_no
+                        size_hint_x: 0.4
+                        text: ""
+                BoxLayout:
+                    size_hint_y: None
+                    height: 30
+                    orientation: "horizontal"
+                    spacing: 20
+                    Label:
+                        size_hint_x: 0.6
+                        text: "Einwurf:"
+                        color: top_button
+                        font_size: 15
+                        canvas.before:
+                            Color:
+                                rgba: block_line
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                    InfoLabel:
+                        id: pop_up_pay_in
+                        size_hint_x: 0.4
+                        text: ""
+                BoxLayout:
+                    size_hint_y: None
+                    height: 51
+                    orientation: "horizontal"
+                    spacing: 20
+                    padding: 0, 1, 0, 20
+                    Label:
+                        size_hint_x: 0.6
+                        text: "Auswurf:"
+                        color: top_button
+                        font_size: 15
+                        canvas.before:
+                            Color:
+                                rgba: block_line
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                    InfoLabel:
+                        id: pop_up_pay_out
+                        size_hint_x: 0.4
+                        text: ""
+                BoxLayout:
+                    size_hint_y: None
+                    height: 30
+                    orientation: "horizontal"
+                    spacing: 20
+                    Label:
+                        size_hint_x: 0.6
+                        text: "Saldo (1)"
+                        color: top_button
+                        font_size: 15
+                        canvas.before:
+                            Color:
+                                rgba: block_line
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                    InfoLabel:
+                        id: pop_up_balance1
+                        size_hint_x: 0.4
+                        text: ""
+                BoxLayout:
+                    size_hint_y: None
+                    height: 51
+                    orientation: "horizontal"
+                    spacing: 20
+                    padding: 0, 1, 0, 20
+                    Label:
+                        size_hint_x: 0.6
+                        text: "Saldo (2)"
+                        color: top_button
+                        font_size: 15
+                        canvas.before:
+                            Color:
+                                rgba: block_line
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                    InfoLabel:
+                        id: pop_up_balance2
+                        size_hint_x: 0.4
+                        text: ""
+                BoxLayout:
+                    size_hint_y: None
+                    height: 30
+                    orientation: "horizontal"
+                    spacing: 20
+                    Label:
+                        size_hint_x: 0.6
+                        text: "Einsätze:"
+                        color: [1.0, 1.0, 1.0, 1.0]
+                        font_size: 15
+                        canvas.before:
+                            Color:
+                                rgba: top_button
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                    InfoLabel:
+                        id: pop_up_operation
+                        size_hint_x: 0.4
+                        text: ""
+                BoxLayout:
+                    size_hint_y: None
+                    height: 32
+                    orientation: "horizontal"
+                    spacing: 20
+                    padding: 0, 1, 0, 1
+                    Label:
+                        size_hint_x: 0.6
+                        text: "Gewinne:"
+                        color: [1.0, 1.0, 1.0, 1.0]
+                        font_size: 15
+                        canvas.before:
+                            Color:
+                                rgba: top_button
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                    InfoLabel:
+                        id: pop_up_profit
+                        size_hint_x: 0.4
+                        text: ""
+                BoxLayout:
+                    size_hint_y: None
+                    height: 30
+                    orientation: "horizontal"
+                    spacing: 20
+                    Label:
+                        size_hint_x: 0.6
+                        text: "Spieleraufwand:"
+                        color: [1.0, 1.0, 1.0, 1.0]
+                        font_size: 15
+                        canvas.before:
+                            Color:
+                                rgba: top_button
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                    InfoLabel:
+                        id: pop_up_player_burden
+                        size_hint_x: 0.4
+                        text: ""
+                Widget:
+            BoxLayout:
+                id: pop_up_dispenser
+                size_hint_x: 0.3
+                orientation: "vertical"
+                BoxLayout:
+                    size_hint_y: None
+                    height: 50
+                    padding: 0, 0, 0, 20
+                    Label:
+                        text: "Hopper / Rohreninhalt :"
+                        color: [1.0, 1.0, 1.0, 1.0, 1.0]
+                        font_size: 15
+                        canvas.before:
+                            Color:
+                                rgba: top_button
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                BoxLayout:
+                    id: hopper_box
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: 140
+                    padding: 0, 0, 0, 20
+                BoxLayout:
+                    size_hint_y: None
+                    height: 30
+                    padding: 0, 0, 0, 0
+                    Label:
+                        text: "Dispenserinhalt :"
+                        color: [1.0, 1.0, 1.0, 1.0]
+                        font_size: 15
+                        canvas.before:
+                            Color:
+                                rgba: top_button
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                BoxLayout:
+                    id: dispenser_box
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: 200
+        Button:
+            size_hint_x: 1
+            size_hint_y: None
+            height: 40
+            text: 'OK'
+            on_press: root.dismiss()
+
+<FileInfo@BoxLayout>:
+    orientation: 'vertical'
+    padding: [20, 20, 20, 20]
+    spacing: 10
+
+    BoxLayout:
+        size_hint_y: None
+        height: 50
+        spacing: 10
+        Widget
+        Label:
+            size_hint_x: 0.2
+            text: "Datum:"
+            font_size: 30
+            color: top_button
+        Label:
+            id: pop_up_date
+            size_hint_x: 0.2
+            text: ""
+            font_size: 16
+            color: 1.0, 0.0, 0.0, 1.0
+            canvas.before:
+                Color:
+                    rgba: 1.0, 1.0, 1.0, 1.0
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+    Label:
+        size_hint_y: None
+        height: 60
+        id: client_place_model
+        text: ""
+        font_size: 20
+        color: 1.0, 0.0, 0.0, 1.0
+        canvas.before:
+            Color:
+                rgba: block_line
+            Rectangle:
+                pos: self.pos
+                size: self.size
+    BoxLayout:
+        orientation: 'horizontal'
+        BoxLayout:
+            size_hint_x: 0.3
+            size_hint_y: 1.0
+            ScrollView
+                Label:
+                    id: file_content
+                    text: ""
+                    text_size: self.width, None
+                    height: self.texture_size[1]
+                    size_hint_y: None
+                    size_hint_x: 1.0
+                    padding_x: 20
+                    color: [0.0, 0.0, 0.0, 1.0]
+                    canvas.before:
+                        Color:
+                            rgba: [1.0, 1.0, 1.0, 1.0]
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+        BoxLayout:
+            size_hint_x: 0.4
+            orientation: "vertical"
+            padding: 20, 0, 20, 0
+            BoxLayout:
+                size_hint_y: None
+                height: 30
+                orientation: "horizontal"
+                spacing: 20
+                Label:
+                    size_hint_x: 0.6
+                    text: "Geräte Nr.:"
+                    font_size: 15
+                    canvas.before:
+                        Color:
+                            rgba: top_button
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                InfoLabel:
+                    id: pop_up_machine_no
+                    size_hint_x: 0.4
+                    text: ""
+            BoxLayout:
+                size_hint_y: None
+                height: 51
+                orientation: "horizontal"
+                spacing: 20
+                padding: 0, 1, 0, 20
+                Label:
+                    size_hint_x: 0.6
+                    text: "Zulassungs Nr.:"
+                    font_size: 15
+                    canvas.before:
+                        Color:
+                            rgba: top_button
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                InfoLabel:
+                    id: pop_up_approve_no
+                    size_hint_x: 0.4
+                    text: ""
+            BoxLayout:
+                size_hint_y: None
+                height: 30
+                orientation: "horizontal"
+                spacing: 20
+                Label:
+                    size_hint_x: 0.6
+                    text: "Einwurf:"
+                    color: top_button
+                    font_size: 15
+                    canvas.before:
+                        Color:
+                            rgba: block_line
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                InfoLabel:
+                    id: pop_up_pay_in
+                    size_hint_x: 0.4
+                    text: ""
+            BoxLayout:
+                size_hint_y: None
+                height: 51
+                orientation: "horizontal"
+                spacing: 20
+                padding: 0, 1, 0, 20
+                Label:
+                    size_hint_x: 0.6
+                    text: "Auswurf:"
+                    color: top_button
+                    font_size: 15
+                    canvas.before:
+                        Color:
+                            rgba: block_line
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                InfoLabel:
+                    id: pop_up_pay_out
+                    size_hint_x: 0.4
+                    text: ""
+            BoxLayout:
+                size_hint_y: None
+                height: 30
+                orientation: "horizontal"
+                spacing: 20
+                Label:
+                    size_hint_x: 0.6
+                    text: "Saldo (1)"
+                    color: top_button
+                    font_size: 15
+                    canvas.before:
+                        Color:
+                            rgba: block_line
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                InfoLabel:
+                    id: pop_up_balance1
+                    size_hint_x: 0.4
+                    text: ""
+            BoxLayout:
+                size_hint_y: None
+                height: 51
+                orientation: "horizontal"
+                spacing: 20
+                padding: 0, 1, 0, 20
+                Label:
+                    size_hint_x: 0.6
+                    text: "Saldo (2)"
+                    color: top_button
+                    font_size: 15
+                    canvas.before:
+                        Color:
+                            rgba: block_line
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                InfoLabel:
+                    id: pop_up_balance2
+                    size_hint_x: 0.4
+                    text: ""
+            BoxLayout:
+                size_hint_y: None
+                height: 30
+                orientation: "horizontal"
+                spacing: 20
+                Label:
+                    size_hint_x: 0.6
+                    text: "Einsätze:"
+                    color: [1.0, 1.0, 1.0, 1.0]
+                    font_size: 15
+                    canvas.before:
+                        Color:
+                            rgba: top_button
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                InfoLabel:
+                    id: pop_up_operation
+                    size_hint_x: 0.4
+                    text: ""
+            BoxLayout:
+                size_hint_y: None
+                height: 32
+                orientation: "horizontal"
+                spacing: 20
+                padding: 0, 1, 0, 1
+                Label:
+                    size_hint_x: 0.6
+                    text: "Gewinne:"
+                    color: [1.0, 1.0, 1.0, 1.0]
+                    font_size: 15
+                    canvas.before:
+                        Color:
+                            rgba: top_button
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                InfoLabel:
+                    id: pop_up_profit
+                    size_hint_x: 0.4
+                    text: ""
+            BoxLayout:
+                size_hint_y: None
+                height: 30
+                orientation: "horizontal"
+                spacing: 20
+                Label:
+                    size_hint_x: 0.6
+                    text: "Spieleraufwand:"
+                    color: [1.0, 1.0, 1.0, 1.0]
+                    font_size: 15
+                    canvas.before:
+                        Color:
+                            rgba: top_button
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                InfoLabel:
+                    id: pop_up_player_burden
+                    size_hint_x: 0.4
+                    text: ""
+            Widget:
+        BoxLayout:
+            id: pop_up_dispenser
+            size_hint_x: 0.3
+            orientation: "vertical"
+            BoxLayout:
+                size_hint_y: None
+                height: 50
+                padding: 0, 0, 0, 20
+                Label:
+                    text: "Hopper / Rohreninhalt :"
+                    color: [1.0, 1.0, 1.0, 1.0, 1.0]
+                    font_size: 15
+                    canvas.before:
+                        Color:
+                            rgba: top_button
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+            BoxLayout:
+                id: hopper_box
+                orientation: "vertical"
+                size_hint_y: None
+                height: 140
+                padding: 0, 0, 0, 20
+            BoxLayout:
+                size_hint_y: None
+                height: 30
+                padding: 0, 0, 0, 0
+                Label:
+                    text: "Dispenserinhalt :"
+                    color: [1.0, 1.0, 1.0, 1.0]
+                    font_size: 15
+                    canvas.before:
+                        Color:
+                            rgba: top_button
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+            BoxLayout:
+                id: dispenser_box
+                orientation: "vertical"
+                size_hint_y: None
+                height: 200
+
+<InfoLabel>
+    color: [0.0, 0.0, 0.0, 1.0]
+    font_size: 15
+    canvas.before:
+        Color:
+            rgba: [1.0, 1.0, 1.0, 1.0]
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+<DatePicker>:
+    pHint: 0.7, 0.7

@@ -1,0 +1,8 @@
+kivy
+KivyCalendar
+opencv-python==4.2.0.34
+Crypto
+imutils
+pycryptodome==3.4.3
+zmq
+serial

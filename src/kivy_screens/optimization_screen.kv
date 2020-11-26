@@ -1,0 +1,205 @@
+#:set gray_header_label [0.25, 0.25, 0.25, 1.0]
+#:set body_screen [0.85, 0.88, 0.95, 1.0]
+#:set top_button [0.19, 0.33, 0.59, 1.0]
+#:set screen_button [0.16, 0.34, 0.66, 1.0]
+#:set button_click [0.75, 0.0, 0.0, 1.0]
+#:set block_line [0.36, 0.61, 0.84, 1.0]
+
+
+<OptimizeScreen>:
+    FloatLayout:
+        FloatLayout:
+            canvas.before:
+                Color:
+                    rgba: gray_header_label
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            orientation: 'horizontal'
+            size_hint: 1, 0.1
+            padding: [20, 20, 20, 0]
+            spacing: 10
+        FloatLayout:
+            canvas.before:
+                Color:
+                    rgba: body_screen
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            orientation: 'horizontal'
+            size_hint: 1, 0.9
+            padding: [20, 0, 20, 20]
+            spacing: 10
+        RoundedButton:
+            size_hint: 0.15, 0.1
+            pos_hint: {'center_x': 0.1, 'center_y': 0.9}
+            spacing: 10
+            text: "VDAI Daten"
+            back_color: top_button
+            on_press:
+                root.manager.transition.direction = 'right'
+                root.manager.current = 'data'
+        RoundedButton:
+            size_hint: 0.15, 0.1
+            pos_hint: {'center_x': 0.3, 'center_y': 0.9}
+            spacing: 10
+            text: "Analyse"
+            back_color: top_button
+            on_press:
+                root.manager.transition.direction = 'right'
+                root.manager.current = 'analyze'
+        RoundedButton:
+            size_hint: 0.15, 0.1
+            pos_hint: {'center_x': 0.5, 'center_y': 0.9}
+            spacing: 10
+            text: "Optimierung"
+            back_color: button_click
+            on_press:
+                root.manager.current = 'optimization'
+        RoundedButton:
+            size_hint: 0.15, 0.1
+            pos_hint: {'center_x': 0.9, 'center_y': 0.9}
+            spacing: 10
+            text: "Datenbank Tools"
+            back_color: top_button
+            on_press:
+                root.manager.transition.direction = 'left'
+                root.manager.current = 'data_tool'
+        FloatLayout:
+            canvas.before:
+                Color:
+                    rgba: block_line
+                Line:
+                    width: 5
+                    rectangle: self.x, self.y, self.width, self.height
+            orientation: 'vertical'
+            size_hint: 0.2, 0.75
+            pos_hint: {'center_x': 0.13, 'center_y': 0.43}
+            padding: [20, 20, 20, 20]
+            spacing: 10
+            RoundedButton:
+                size_hint: 0.8, 0.15
+                pos_hint: {'center_x': 0.5, 'center_y': 0.8}
+                spacing: 10
+                text: "Auszahlquote"
+                back_color: block_line
+                on_press: root.display_ratio_bar()
+
+        BoxLayout:
+            canvas.before:
+                Color:
+                    rgba: block_line
+                Line:
+                    width: 5
+                    rectangle: self.x, self.y, self.width, self.height
+            size_hint: 0.7, 0.75
+            pos_hint: {'center_x': 0.62, 'center_y': 0.43}
+            orientation: 'vertical'
+            padding: [20, 20, 20, 20]
+            spacing: 10
+            BoxLayout:
+                size_hint_y: None
+                height: 50
+                spacing: 10
+                Label:
+                    text: "Client:"
+                    font_size: 30
+                    color: top_button
+                Label:
+                    id: opt_selected_client
+                    text: ""
+                    font_size: 15
+                    color: 1.0, 0.0, 0.0, 1.0
+                    canvas.before:
+                        Color:
+                            rgba: 1.0, 1.0, 1.0, 1.0
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                Label:
+                    text: "Von :"
+                    font_size: 30
+                    color: top_button
+                Label:
+                    id: von_selected_date
+                    text: ""
+                    font_size: 25
+                    color: 1.0, 0.0, 0.0, 1.0
+                    canvas.before:
+                        Color:
+                            rgba: 1.0, 1.0, 1.0, 1.0
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                Label:
+                    text: "Bis :"
+                    font_size: 30
+                    color: top_button
+                Label:
+                    id: bis_selected_date
+                    text: ""
+                    font_size: 25
+                    color: top_button
+                    canvas.before:
+                        Color:
+                            rgba: 1.0, 1.0, 1.0, 1.0
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+            Label:
+                size_hint_y: None
+                height: 60
+                id: client_place_model
+                text: ""
+                font_size: 20
+                color: 1.0, 0.0, 0.0, 1.0
+                canvas.before:
+                    Color:
+                        rgba: block_line
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+            BoxLayout:
+                size_hint_y: None
+                height: 200
+                orientation: 'horizontal'
+                pos_hint: {'center_x': 0.5, 'center_y': 0.9}
+                padding: 50, 50, 50, 50
+                spacing: 50
+                Label:
+                    size_hint_x: 0.5
+                    text: "Top Games"
+                    font_size: 40
+                    canvas.before:
+                        Color:
+                            rgba: top_button
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                Label:
+                    size_hint_x: 0.5
+                    text: "Lost Games"
+                    font_size: 40
+                    canvas.before:
+                        Color:
+                            rgba: top_button
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+            BoxLayout:
+                id: ratio_bar
+                size_hint_y: None
+                height: 30
+            Widget:
+
+<RoundedButton@Button>:
+    background_color: 0, 0, 0, 0  # the last zero is the critical on, make invisible
+    back_color: (1, 0, 1, 1)
+    border_radius: [18]
+    canvas.before:
+        Color:
+            rgba: self.back_color  # visual feedback of press
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: self.border_radius
