@@ -1,4 +1,4 @@
-# KivyApp
+# CommunicatorApp
 
 ## Overview
 This project is to communicate with some sensors called client and display the necessary information to analyze from the database that client 
